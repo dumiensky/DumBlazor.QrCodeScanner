@@ -1,21 +1,27 @@
 import ("./jsQR.js");
 let videoObject = null;
-let videoStopped = false;
+let dotNetRef = null;
 
 let DumBlazorScanner = {
     QRCodeScanned: function (code) {
-        DotNet.invokeMethodAsync("DumBlazor.QrCodeScanner", "CodeScannedCallback", code);
+        if (!dotNetRef)
+            return;
+
+        dotNetRef.invokeMethodAsync("CodeScannedCallback", code);
     },
     ErrorOccured: function (error) {
+        if (!dotNetRef)
+            return;
+        
         let json = JSON.stringify(error);
-        DotNet.invokeMethodAsync("DumBlazor.QrCodeScanner", "ErrorCallback", json);
+        dotNetRef.invokeMethodAsync("ErrorCallback", json);
     },
-    Init: function (canvasId, requestedWidth, highlightColor) {
+    Init: function (dotNet, canvasId, requestedWidth, highlightColor) {
         try {
-            videoStopped = false;
+            dotNetRef = dotNet;
             videoObject = document.createElement("video");
             let canvasElement = document.getElementById(canvasId);
-            let canvas = canvasElement.getContext("2d");
+            let canvas = canvasElement.getContext("2d", { willReadFrequently: true });
 
             function drawLine(begin, end, color) {
                 canvas.beginPath();
@@ -26,7 +32,7 @@ let DumBlazorScanner = {
                 canvas.stroke();
             }
 
-            // Use facingMode: environment to attemt to get the front camera on phones
+            // Use facingMode: environment to attempt to get the front camera on phones
             navigator.mediaDevices
                 .getUserMedia({ video: { facingMode: "environment" } })
                 .then(function (stream) {
@@ -36,14 +42,10 @@ let DumBlazorScanner = {
                     requestAnimationFrame(tick)
                 })
                 .catch((userMediaError) => {
-                    //console.error("mediaDevices " + userMediaError);
-                    DumBlazorScanner.ErrorOccured(userMediaError);
+                    DumBlazorScanner.ErrorOccured({ mediaDevicesError: userMediaError.toString() });
                 });
 
             function tick() {
-                if (videoStopped === true) // if the video has been stopped we don't have to execute the QR reading
-                    return;
-
                 if (videoObject.readyState === videoObject.HAVE_ENOUGH_DATA) {
                     canvasElement.hidden = false;
 

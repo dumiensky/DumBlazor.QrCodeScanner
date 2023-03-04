@@ -1,0 +1,43 @@
+﻿@page "/"
+@using DumBlazor.QrCodeScanner
+
+<PageTitle>Index</PageTitle>
+
+<h1>Hello, demo!</h1>
+
+@if (!_initialized)
+{
+	<h3>Loading...</h3>
+}
+
+<QrCodeScanner 
+	OnCodeScanned="Console.WriteLine"
+	OnReady="Ready"
+	OnError="Error"
+	Interval="TimeSpan.FromMilliseconds(200)"/>
+
+@if (!string.IsNullOrEmpty(_error))
+{
+	<p class="text-danger">
+		@_error
+	</p>
+}
+
+@code{
+
+	bool _initialized;
+	string? _error;
+
+	void Error(string e) => InvokeAsync(() =>
+	{
+		_error = e;
+		StateHasChanged();
+	});
+
+	void Ready() => InvokeAsync(() =>
+	{
+		_initialized = true;
+		StateHasChanged();
+	});
+
+}

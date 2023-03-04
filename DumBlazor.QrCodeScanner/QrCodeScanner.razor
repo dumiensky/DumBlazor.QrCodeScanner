@@ -27,8 +27,11 @@
 	
 	QrCodeScannerInterop? _interop;
 
-	protected override async Task OnInitializedAsync()
+	protected override async Task OnAfterRenderAsync(bool first)
 	{
+		if (!first)
+			return;
+		
 		try
 		{
 			_interop = new(_js);
