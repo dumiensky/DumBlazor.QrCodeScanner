@@ -1,0 +1,44 @@
+@using Microsoft.JSInterop
+@inject IJSRuntime _js
+
+<canvas id="@_canvasId" hidden></canvas>
+
+@code {
+
+	[Parameter, EditorRequired]
+	public Action<string> OnCodeScanned { get; set; } = default!;
+
+	[Parameter]
+	public Action<string>? OnError { get; set; }
+
+	[Parameter]
+	public Action? OnReady { get; set; }
+    
+	[Parameter]
+	public string? Width { get; set; }
+    
+	[Parameter]
+	public TimeSpan Interval { get; set; }
+
+	[Parameter]
+	public string HighlightColor { get; set; } = "#FF3B58";
+
+	readonly string _canvasId = $"qr-{Guid.NewGuid()}";
+	
+	QrCodeScannerInterop? _interop;
+
+	protected override async Task OnInitializedAsync()
+	{
+		try
+		{
+			_interop = new(_js);
+			await _interop.Init(OnCodeScanned, OnError, Interval, Width, HighlightColor, _canvasId);
+			
+			OnReady?.Invoke();
+		}
+		catch (Exception e)
+		{
+			OnError?.Invoke(e.Message);
+		}
+	}
+}
