@@ -32,7 +32,7 @@ let DumBlazorScanner = {
                 canvas.stroke();
             }
 
-            // Use facingMode: environment to attemt to get the front camera on phones
+            // Use facingMode: environment to attempt to get the front camera on phones
             navigator.mediaDevices
                 .getUserMedia({ video: { facingMode: "environment" } })
                 .then(function (stream) {
@@ -42,8 +42,7 @@ let DumBlazorScanner = {
                     requestAnimationFrame(tick)
                 })
                 .catch((userMediaError) => {
-                    //console.error("mediaDevices " + userMediaError);
-                    DumBlazorScanner.ErrorOccured(userMediaError);
+                    DumBlazorScanner.ErrorOccured({ mediaDevicesError: userMediaError.toString() });
                 });
 
             function tick() {
