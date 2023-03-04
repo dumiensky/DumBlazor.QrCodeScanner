@@ -1,6 +1,6 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DumBlazor.QrCodeScanner", "DumBlazor.QrCodeScanner.csproj", "{7DCD8438-93B2-4859-BF3F-1526F601AE5A}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DumBlazor.QrCodeScanner", "DumBlazor.QrCodeScanner/DumBlazor.QrCodeScanner.csproj", "{7DCD8438-93B2-4859-BF3F-1526F601AE5A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
