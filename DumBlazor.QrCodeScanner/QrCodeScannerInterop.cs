@@ -2,7 +2,7 @@ using Microsoft.JSInterop;
 
 namespace DumBlazor.QrCodeScanner;
 
-internal class QrCodeScannerInterop : IAsyncDisposable
+public class QrCodeScannerInterop : IAsyncDisposable
 {
     DateTime? _lastScanTimestamp;
 
@@ -29,22 +29,31 @@ internal class QrCodeScannerInterop : IAsyncDisposable
         _qrCodeError = qrCodeError;
         _scanInterval = interval.Milliseconds;
 
+        var dotNetRef = DotNetObjectReference.Create(this);
+
         var module = await _moduleTask.Value;
-        await module.InvokeVoidAsync("DumBlazorScanner.Init", canvasId, width, highlightColor);
+        await module.InvokeVoidAsync("DumBlazorScanner.Init", dotNetRef, canvasId, width, highlightColor);
     }
     
     [JSInvokable]
-    public void CodeScannedCallback(string value)
+    public Task CodeScannedCallback(string value)
     {
         if (!_lastScanTimestamp.HasValue || _lastScanTimestamp.Value < DateTime.UtcNow.AddMilliseconds(-_scanInterval))
         {
             _lastScanTimestamp = DateTime.UtcNow;
             _qrCodeScanned?.Invoke(value);
         }
+
+        return Task.CompletedTask;
     }
-    
+
     [JSInvokable]
-    public void ErrorCallback(string value) => _qrCodeError?.Invoke(value);
+    public Task ErrorCallback(string value)
+    {
+        _qrCodeError?.Invoke(value);
+
+        return Task.CompletedTask;
+    }
 
     public async ValueTask DisposeAsync()
     {
