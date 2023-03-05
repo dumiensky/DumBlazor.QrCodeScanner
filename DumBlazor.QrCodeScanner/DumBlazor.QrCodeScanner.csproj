@@ -6,7 +6,7 @@
         <Nullable>enable</Nullable>
 
         <PackageId>DumBlazor.QrCodeScanner</PackageId>
-        <Version>1.0.0</Version>
+        <Version>1.0.1</Version>
         <Authors>Kacper Dumieński</Authors>
         <Company>dumiensky</Company>
         <PackageTags>Blazor;Qr;QrCode;Scanner;QrScanner;Qr Scanner</PackageTags>
@@ -15,6 +15,10 @@
             No additional configuration, scripts or injects needed.
             Just place the component and provide a code scanned handler method.
         </Description>
+        <PackageReadmeFile>README.md</PackageReadmeFile>
+        <RepositoryType>git</RepositoryType>
+        <RepositoryUrl>https://github.com/dumiensky/DumBlazor.QrCodeScanner</RepositoryUrl>
+        <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     </PropertyGroup>
     
     <ItemGroup>
@@ -24,6 +28,11 @@
     <!-- Source Link -->
     <ItemGroup>
         <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.1.1" PrivateAssets="All" />
+    </ItemGroup>
+
+    <!-- Include README -->
+    <ItemGroup>
+        <None Include="..\README.md" Pack="true" PackagePath="\"/>
     </ItemGroup>
 
 </Project>
