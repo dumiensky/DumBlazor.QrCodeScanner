@@ -8,7 +8,7 @@ public class QrCodeScannerInterop : IAsyncDisposable
 
     Action<string>? _qrCodeScanned;
     Action<string>? _qrCodeError;
-    int _scanInterval;
+    double _scanInterval;
 
     readonly Lazy<Task<IJSObjectReference>> _moduleTask;
 
@@ -27,7 +27,7 @@ public class QrCodeScannerInterop : IAsyncDisposable
     {
         _qrCodeScanned = qrCodeScanned;
         _qrCodeError = qrCodeError;
-        _scanInterval = interval.Milliseconds;
+        _scanInterval = interval.TotalMilliseconds;
 
         var dotNetRef = DotNetObjectReference.Create(this);
 
